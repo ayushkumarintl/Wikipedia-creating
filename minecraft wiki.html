@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Wikipedia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f6f6f6;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
+            color: white;
+            padding: 20px 0;
+            border-bottom: 4px solid #d4af37;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background-color: #d4af37;
+            border: 2px solid #f0e68c;
+        }
+
+        .search-box {
+            flex: 1;
+            display: flex;
+            gap: 8px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-box button {
+            padding: 10px 20px;
+            background-color: #d4af37;
+            color: #1a472a;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .search-box button:hover {
+            background-color: #f0e68c;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .sidebar {
+            width: 220px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #1a472a;
+            border-bottom: 2px solid #1a472a;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 10px 0;
+            color: #0645ad;
+            text-decoration: none;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .main-content {
+            flex: 1;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 30px;
+        }
+
+        .article-title {
+            font-size: 28px;
+            color: #1a472a;
+            margin-bottom: 10px;
+            font-weight: bold;
+            border-bottom: 3px solid #1a472a;
+            padding-bottom: 15px;
+        }
+
+        .article-meta {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        .article-content {
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .article-content h2 {
+            color: #1a472a;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-size: 18px;
+            border-left: 4px solid #d4af37;
+            padding-left: 12px;
+        }
+
+        .article-content p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .article-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .article-content li {
+            margin-bottom: 8px;
+        }
+
+        .infobox {
+            float: right;
+            background-color: #f5f5f5;
+            border: 2px solid #d4af37;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 0 0 15px 15px;
+            width: 280px;
+            font-size: 13px;
+        }
+
+        .infobox-title {
+            font-weight: bold;
+            text-align: center;
+            background-color: #1a472a;
+            color: white;
+            padding: 8px;
+            margin: -15px -15px 15px -15px;
+            border-radius: 2px 2px 0 0;
+        }
+
+        .infobox-row {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            padding: 8px 0;
+        }
+
+        .infobox-label {
+            font-weight: bold;
+            width: 40%;
+            color: #1a472a;
+        }
+
+        .infobox-value {
+            width: 60%;
+            color: #333;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .article-image {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .article-image-placeholder {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+
+        .image-caption {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .related-articles {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .related-articles h3 {
+            color: #1a472a;
+            margin-bottom: 15px;
+        }
+
+        .related-articles a {
+            display: inline-block;
+            background-color: #e8f5e9;
+            color: #1a472a;
+            padding: 8px 12px;
+            margin: 5px 5px 5px 0;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+            border: 1px solid #1a472a;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .related-articles a:hover {
+            background-color: #1a472a;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .infobox {
+                float: none;
+                margin: 0 0 15px 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <div class="logo-icon"></div>
+                Minecraft Wiki
+            </a>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search Minecraft knowledge...">
+                <button onclick="searchArticles()">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <h3>Categories</h3>
+            <a class="sidebar-link active" onclick="showArticle('crafting')">Crafting</a>
+            <a class="sidebar-link" onclick="showArticle('biomes')">Biomes</a>
+            <a class="sidebar-link" onclick="showArticle('mobs')">Mobs</a>
+            <a class="sidebar-link" onclick="showArticle('tools')">Tools & Armor</a>
+            <a class="sidebar-link" onclick="showArticle('blocks')">Building Blocks</a>
+            <a class="sidebar-link" onclick="showArticle('enchanting')">Enchanting</a>
+            <a class="sidebar-link" onclick="showArticle('potions')">Potions</a>
+            <a class="sidebar-link" onclick="showArticle('dimensions')">Dimensions</a>
+        </div>
+
+        <div class="main-content" id="mainContent">
+            <!-- Articles will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        const articles = {
+            crafting: {
+                title: 'Crafting',
+                meta: 'Last modified: 2024 | Category: Gameplay Mechanics',
+                content: `
+                    <div class="infobox">
+                        <div class="infobox-title">Crafting Table</div>
+                        <div class="infobox-row">
+                            <div class="infobox-label">Type:</div>
+                            <div class="infobox-value">Block</div>
+                        </div>
+                        <div class="infobox-row">
+                            <div class="infobox-label">Stack Size:</div>
+                            <div class="infobox-value">64</div>
+                        </div>
+                        <div class="infobox-row">
+                            <div class="infobox-label">Crafting Recipe:</div>
+                            <div class="infobox-value">4 Wooden Planks</div>
+                        </div>
+                    </div>
+                    
+                    <p>Crafting is the process of arranging materials in specific patterns to create new items and blocks in Minecraft. Most crafting is performed on a crafting table, though some items can be crafted in your character's inventory.</p>
+
+                    <h2>Crafting Table</h2>
+                    <p>The crafting table is a 3×3 grid that allows players to create more complex items than the 2×2 inventory crafting grid. To use a crafting table, place it in the world and interact with it.</p>
+
+                    <h2>Common Recipes</h2>
+                    <ul>
+                        <li><strong>Wooden Planks:</strong> Place wood log in any crafting grid slot</li>
+                        <li><strong>Sticks:</strong> Stack two wooden planks vertically</li>
+                        <li><strong>Chest:</strong> Arrange 8 wooden planks in a square pattern</li>
+                        <li><strong>Pickaxe:</strong> 3 materials in top row, 2 sticks below in the middle</li>
+                        <li><strong>Sword:</strong> 2 materials stacked vertically, stick below</li>
+                    </ul>
+
+                    <h2>Inventory Crafting</h2>
+                    <p>The inventory crafting grid is a 2×2 grid accessible from your inventory. This allows basic crafting without a crafting table, such as creating wooden planks, sticks, and simple tools.</p>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">🎨 Crafting Table Illustration</div>
+                        <div class="image-caption">A crafting table in its natural state</div>
+                    </div>
+
+                    <div class="related-articles">
+                        <h3>Related Articles</h3>
+                        <a onclick="showArticle('tools')">Tools & Armor</a>
+                        <a onclick="showArticle('blocks')">Building Blocks</a>
+                        <a onclick="showArticle('enchanting')">Enchanting</a>
+                    </div>
+                `
+            },
+            biomes: {
+                title: 'Biomes',
+                meta: 'Last modified: 2024 | Category: World Generation',
+                content: `
+                    <div class="infobox">
+                        <div class="infobox-title">Biome Information</div>
+                        <div class="infobox-row">
+                            <div class="infobox-label">Total Biomes:</div>
+                            <div class="infobox-value">60+</div>
+                        </div>
+                        <div class="infobox-row">
+                            <div class="infobox-label">Introduced:</div>
+                            <div class="infobox-value">Beta 1.8</div>
+                        </div>
+                        <div class="infobox-row">
+                            <div class="infobox-label">Modified:</div>
+                            <div class="infobox-value">Caves & Cliffs</div>
+                        </div>
+                    </div>
+
+                    <p>Biomes are distinct ecological regions in the Minecraft world, each with unique climates, terrain, vegetation, and mob spawning patterns. They determine the appearance and resources available in different areas of the game world.</p>
+
+                    <h2>Common Biomes</h2>
+                    <ul>
+                        <li><strong>Plains:</strong> Flat grassland with occasional trees, ideal for building</li>
+                        <li><strong>Forest:</strong> Dense vegetation with various tree types and wildlife</li>
+                        <li><strong>Desert:</strong> Sandy terrain with temples and limited water</li>
+                        <li><strong>Mountain:</strong> Steep terrain with ores and eagles</li>
+                        <li><strong>Swamp:</strong> Wet terrain with lily pads and slimes</li>
+                    </ul>
+
+                    <h2>Rare Biomes</h2>
+                    <p>Some biomes are much rarer and harder to find. These include the Bamboo Jungle, Badlands, and Deep Dark biomes, each offering unique challenges and rewards.</p>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">🏔️ Diverse Biomes Showcase</div>
+                        <div class="image-caption">A collection of various biome types found in Minecraft</div>
+                    </div>
+
+                    <div class="related-articles">
+                        <h3>Related Articles</h3>
+                        <a onclick="showArticle('mobs')">Mobs</a>
+                        <a onclick="showArticle('blocks')">Building Blocks</a>
+                        <a onclick="showArticle('dimensions')">Dimensions</a>
+                    </div>
+                `
+            },
+            mobs: {
+                title: 'Mobs',
+                meta: 'Last modified: 2024 | Category: Creatures',
+                content: `
+                    <div class="infobox">
+                        <div class="infobox-title">Mob Categories</div>
+                        <div class="infobox-row">
+                            <div class="infobox-label">Passive Mobs:</div>
+                            <div class="infobox-value">15+</div>
+                        </div>
+                        <div class="infobox-row">
+                            <div class="infobox-label">Hostile Mobs:</div>
+                            <div class="infobox-value">20+</div>
+                        </div>
+                        <div class="infobox-row">
+                            <div class="infobox-label">Boss Mobs:</div>
+                            <div class="infobox-value">3</div>
+                        </div>
+                    </div>
+
+                    <p>Mobs, short for mobile entities, are living creatures in Minecraft. They are divided into three main categories: passive, neutral, and hostile mobs. Each type behaves differently and presents unique challenges or opportunities for players.</p>
+
+                    <h2>Passive Mobs</h2>
+                    <p>Passive mobs never attack the player and include animals such as:</p>
+                    <ul>
+                        <li>Cows (provide leather and beef)</li>
+                        <li>Sheep (provide wool and mutton)</li>
+                        <li>Pigs (provide pork)</li>
+                        <li>Chickens (provide eggs and feathers)</li>
+                        <li>Horses and Donkeys</li>
+                    </ul>
+
+                    <h2>Hostile Mobs</h2>
+                    <p>Hostile mobs actively attack players on sight. Notable hostile mobs include:</p>
+                    <ul>
+                        <li><strong>Zombie:</strong> Basic hostile mob, drops experience</li>
+                        <li><strong>Creeper:</strong> Explodes when near the player</li>
+                        <li><strong>Skeleton:</strong> Shoots arrows from distance</li>
+                        <li><strong>Spider:</strong> Fast melee attacker</li>
+                    </ul>
+
+                    <div class="article-image">
+                        <div class="article-image-placeholder">👹 Hostile Mobs Gallery</div>
+                        <div class="image-caption">Common hostile mobs found in Minecraft</div>
+                    </div>
+
+                    <div class="related-articles">
+                        <h3>Related Articles</h3>
+                        <a onclick="showArticle('tools')">Tools & Armor</a>
+                        <a onclick="showArticle('biomes')">Biomes</a>
+                        <a onclick="showArticle('potions')">Potions</a>
+                    </div>
+                `
+            },
+            tools: {
+                title: 'Tools & Armor',
+                meta: 'Last modified: 2024 | Category: Items & Equipment',
+                content: `
+                    <div class="infobox">
+                        <div class="infobox-title">Tool Tiers</div>
+                        <div class="infobox-row">
+                            <div class="infobox-label">Wooden:</div>
+                            <div class="infobox-value">Weakest</div>
+                        </div>
+                        <div class="infobox-row">
+                            <div class="infobox-label">Stone:</div>
+                            <div class="infobox-value">Better</div>
+                        </div>
+                        <div class="infobox-row">
+                            <div class="infobox-label">Diamond:</div>
+                            <div class="infobox-value">Best (Before Netherite)</div>
+                        </div>
+                        <div class="infobox-row">
+                            <div class="infobox-label">Netherite:</div>
+                            <div class="infobox-value">Strongest</div>
+                        </div>
+                    </div>
+
+                    <p>Tools and armor are essential equipment for mining, combat, and survival in Minecraft. Tools come in different materials with varying durability and effectiveness, while armor provides protection against damage.</p>
+
+                    <h2>Tools</h2>
+                    <p>The primary tools in Minecraft are:</p>
+                    <ul>
+                        <li><strong>Pickaxe:</strong> For mining stone and ore</li>
+                        <li><strong>Axe:</strong> For chopping wood and dealing extra melee damage</li>
+                        <li><strong>Shovel:</strong> For digging dirt, sand, and gravel</li>
+                        <li><strong>Hoe:</strong> For tilling soil and harvesting crops</li>
+                        <li><strong>Sword:</strong> For combat and dealing maximum melee damage</li>
+                    </ul>
+
+                    <h2>Armor Sets</h2>
+                    <p>Armor consists of four pieces: helmet, chestplate, leggings, and boots. Each armor piece reduces incoming damage by a percentage based on the armor material:</p>
+                    <ul>
+                        <li>Leather (weakest, dyeable)</li>
+                        <li>Chainmail (moderate protection)</li>
+                        <li>Iron (strong protection)</li>
+                        <li>Diamond (very strong protection)</li>
+                        <li>Net
